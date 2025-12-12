@@ -1,0 +1,12 @@
+<mat-toolbar color="primary" class="app-toolbar">
+  <span class="brand">Fundraise</span>
+  <span class="spacer"></span>
+  <a mat-button routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+  <a mat-button routerLink="/add-cause" routerLinkActive="active">Add Cause</a>
+</mat-toolbar>
+
+<main class="app-shell">
+  <div class="content-container">
+    <router-outlet />
+  </div>
+</main>

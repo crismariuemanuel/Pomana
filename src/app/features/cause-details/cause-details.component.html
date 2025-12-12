@@ -1,0 +1,37 @@
+<ng-container *ngIf="cause(); else notFound">
+  <div class="container">
+    <div class="hero">
+      <img [src]="cause()?.imageUrl" [alt]="cause()?.title" loading="lazy" />
+    </div>
+
+    <div class="header">
+      <h1>{{ cause()?.title }}</h1>
+      <p class="short">{{ cause()?.shortDescription }}</p>
+    </div>
+
+    <div class="progress">
+      <mat-progress-bar mode="determinate" [value]="progress()"></mat-progress-bar>
+      <div class="raised">
+        Raised {{ cause()?.raised | currency:'USD':'symbol-narrow':'1.0-0' }}
+        of {{ cause()?.target | currency:'USD':'symbol-narrow':'1.0-0' }}
+      </div>
+    </div>
+
+    <div class="body">
+      <p>{{ cause()?.longDescription }}</p>
+    </div>
+
+    <div class="actions">
+      <button mat-raised-button color="primary" (click)="openComingSoon()">Donate Now</button>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #notFound>
+  <div class="container not-found">
+    <h2>Cause not found</h2>
+    <p>The cause you are looking for does not exist.</p>
+    <a mat-stroked-button color="primary" routerLink="/">Back to Feed</a>
+  </div>
+</ng-template>
+

@@ -1,0 +1,41 @@
+.app-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  display: flex;
+  gap: 0.5rem;
+  background: #f7d35a;
+  color: #1f1f1f;
+  border-bottom: 1px solid #e0bf42;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
+}
+
+.brand {
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.app-shell {
+  padding: 96px 16px 40px;
+  background: #f6f4ef;
+}
+
+.content-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+a.active {
+  font-weight: 600;
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 6px;
+}
