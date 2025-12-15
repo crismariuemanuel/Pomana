@@ -1,15 +1,56 @@
 :root {
-  color: #1f1f1f;
-  background-color: #f6f4ef;
+  color: #000000;
+  background-color: #ffffff;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
 
 body {
   margin: 0;
-  background: #f6f4ef;
+  background: #ffffff;
 }
 
 a {
   color: inherit;
   text-decoration: none;
+}
+
+mat-toolbar {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Override Material Design colors to black and white */
+.mat-primary {
+  --mdc-filled-button-container-color: #000000;
+  --mdc-filled-button-label-text-color: #ffffff;
+  --mdc-outlined-button-label-text-color: #000000;
+  --mdc-outlined-button-outline-color: #000000;
+}
+
+.mat-mdc-button.mat-primary {
+  --mdc-text-button-label-text-color: #000000;
+}
+
+.mat-mdc-raised-button.mat-primary {
+  --mdc-filled-button-container-color: #000000;
+  --mdc-filled-button-label-text-color: #ffffff;
+}
+
+.mat-mdc-outlined-button.mat-primary {
+  --mdc-outlined-button-label-text-color: #000000;
+  --mdc-outlined-button-outline-color: #000000;
+}
+
+.mat-mdc-flat-button.mat-primary {
+  --mdc-text-button-label-text-color: #000000;
+}
+
+.mat-mdc-stroked-button.mat-primary {
+  --mdc-outlined-button-label-text-color: #000000;
+  --mdc-outlined-button-outline-color: #000000;
+}
+
+.mat-mdc-progress-bar {
+  --mdc-linear-progress-active-indicator-color: #000000;
+  --mdc-linear-progress-track-color: #e0e0e0;
 }

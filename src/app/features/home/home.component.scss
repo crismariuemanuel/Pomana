@@ -1,0 +1,290 @@
+Already added earlier
+:host {
+  display: block;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.hero {
+  position: relative;
+  background: linear-gradient(120deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6)),
+    url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1400&q=80')
+      center/cover no-repeat;
+  color: #ffffff;
+  overflow: hidden;
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0;
+  margin-bottom: 5%;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  animation: fadeInUp 1s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.12), transparent 45%);
+  pointer-events: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 1;
+  padding: 56px 0;
+  max-width: 700px;
+  text-align: center;
+  margin: 0 auto;
+  animation: fadeInUp 1.2s ease-out 0.3s both;
+}
+
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  font-weight: 700;
+  font-size: 0.85rem;
+  margin: 0 0 16px 0;
+  color: #ffffff;
+}
+
+h1 {
+  margin: 0 0 20px 0;
+  font-size: 3.2rem;
+  font-weight: 800;
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  white-space: nowrap;
+}
+
+h2 {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 800;
+  line-height: 1.2;
+  letter-spacing: -0.3px;
+  color: #000000;
+}
+
+.subtitle {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1.15rem;
+  line-height: 1.7;
+}
+
+.hero-actions {
+  margin-top: 20px;
+}
+
+.trust-section {
+  position: relative;
+  background: #000000;
+  color: #ffffff;
+  padding: 150px 0;
+  width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  margin-right: calc(-50vw + 50%);
+  margin-top: 2px;
+  margin-bottom: 0;
+  animation: slideInFromSides 1s ease-out;
+  overflow: hidden;
+}
+
+.trust-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url('https://www.goodhub.com/app/uploads/2024/01/The-Power-of-Storytelling-in-Charity-Fundraising.png')
+    center/cover no-repeat;
+  z-index: 0;
+}
+
+.trust-section::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(120deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6));
+  z-index: 1;
+}
+
+@keyframes slideInFromSides {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.trust-content {
+  position: relative;
+  z-index: 10;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.trust-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin: 0 0 24px 0;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+.trust-text {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin: 0 0 24px 0;
+  color: #ffffff;
+}
+
+.trust-text .highlight {
+  text-decoration: underline;
+  text-decoration-thickness: 2px;
+  text-underline-offset: 4px;
+}
+
+.trust-link {
+  color: #ffffff;
+  font-size: 1rem;
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+  transition: opacity 0.3s ease;
+  font-weight: 500;
+}
+
+.trust-link:hover {
+  opacity: 0.9;
+}
+
+.cta-button {
+  background: transparent;
+  border: 1px solid #ffffff;
+  color: #ffffff;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: inherit;
+}
+
+.cta-button:hover {
+  background: #ffffff;
+  color: #000000;
+  transform: translateY(-2px);
+}
+
+.cta-button:active {
+  transform: translateY(0);
+}
+
+.cards-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.view-all-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.view-all-button {
+  background: transparent;
+  border: 1px solid #000000;
+  color: #000000;
+  padding: 12px 32px;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.view-all-button:hover {
+  background: #000000;
+  color: #ffffff;
+  transform: translateY(-2px);
+}
+
+.section-header {
+  display: block;
+  margin-bottom: 32px;
+  text-align: left;
+  width: 100%;
+  animation: fadeInUp 0.8s ease-out 0.5s both;
+}
+
+.section-header .eyebrow {
+  color: #000000;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.section-header h2 {
+  text-align: left;
+}
+
+.section-header .subtitle {
+  color: #000000;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-top: 12px;
+  text-align: left;
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+

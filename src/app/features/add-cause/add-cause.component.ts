@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, OnDestroy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
@@ -13,6 +14,7 @@ import { CausesService } from '../../core/causes/causes.service';
   selector: 'app-add-cause',
   standalone: true,
   imports: [
+    CommonModule,
     ReactiveFormsModule,
     MatCardModule,
     MatButtonModule,
@@ -20,8 +22,32 @@ import { CausesService } from '../../core/causes/causes.service';
     MatInputModule,
     MatSnackBarModule,
   ],
+  styleUrls: ['./add-cause.component.scss'],
   template: `
-    <div class="form-container">
+    <div class="page-container">
+      <div class="carousel-section">
+        <div class="carousel-container">
+          <div class="carousel-slides">
+            @for (image of carouselImages; track image; let i = $index) {
+              <div class="carousel-slide" [class.active]="i === currentSlideIndex">
+                <img [src]="image" [alt]="'Carousel image ' + (i + 1)" />
+              </div>
+            }
+          </div>
+          <div class="carousel-indicators">
+            @for (image of carouselImages; track image; let i = $index) {
+              <button
+                class="indicator"
+                [class.active]="i === currentSlideIndex"
+                (click)="goToSlide(i)"
+                [attr.aria-label]="'Go to slide ' + (i + 1)"
+              ></button>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="form-section">
       <mat-card appearance="outlined" class="form-card">
         <mat-card-header>
           <mat-card-title>Create a New Cause</mat-card-title>
@@ -124,119 +150,70 @@ import { CausesService } from '../../core/causes/causes.service';
           </form>
         </mat-card-content>
       </mat-card>
+      </div>
     </div>
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-      }
-
-      .form-container {
-        display: flex;
-        justify-content: center;
-        padding: 24px 16px;
-      }
-
-      .form-card {
-        max-width: 650px;
-        width: 100%;
-        background: linear-gradient(180deg, #f9f5ec 0%, #f6f1e7 100%);
-        border: 1px solid #dcd2c4;
-      }
-
-      mat-card-header {
-        margin-bottom: 24px;
-      }
-
-      mat-card-title {
-        font-size: 1.8rem;
-        font-weight: 800;
-        color: #2d2d2d;
-      }
-
-      form {
-        display: flex;
-        flex-direction: column;
-        gap: 16px;
-      }
-
-      .full-width {
-        width: 100%;
-      }
-
-      .actions {
-        display: flex;
-        justify-content: flex-end;
-        margin-top: 8px;
-        padding-top: 16px;
-      }
-
-      button[mat-raised-button] {
-        min-width: 160px;
-        font-size: 1rem;
-        padding: 10px 24px;
-      }
-
-      .file-upload-section {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-      }
-
-      .file-input {
-        display: none;
-      }
-
-      .file-upload-controls {
-        display: flex;
-        align-items: center;
-        gap: 12px;
-      }
-
-      .file-button {
-        min-width: 140px;
-      }
-
-      .file-name {
-        color: #545454;
-        font-size: 0.9rem;
-      }
-
-      .error-message {
-        color: #d32f2f;
-        font-size: 0.75rem;
-        margin-top: -8px;
-      }
-
-      .image-preview {
-        width: 100%;
-        max-height: 300px;
-        border-radius: 8px;
-        overflow: hidden;
-        border: 1px solid #dcd2c4;
-        background: #ffffff;
-      }
-
-      .image-preview img {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        display: block;
-      }
-    `,
-  ],
 })
-export class AddCauseComponent {
+export class AddCauseComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly fb = inject(FormBuilder);
   private readonly causesService = inject(CausesService);
   private readonly router = inject(Router);
   private readonly snackBar = inject(MatSnackBar);
+  private readonly cdr = inject(ChangeDetectorRef);
 
   selectedFileName: string | null = null;
   imagePreview: string | null = null;
   imageUrlError: string | null = null;
   private selectedImageDataUrl: string | null = null;
+
+  currentSlideIndex = 0;
+  private carouselInterval?: number;
+
+  carouselImages = [
+    'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1503454537195-1dcabb73ffb9?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1529390079861-591de354faf5?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1516627145497-ae6968895b74?auto=format&fit=crop&w=1400&q=80',
+    'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=1400&q=80',
+  ];
+
+  ngOnInit(): void {
+    // Initialize
+  }
+
+  ngAfterViewInit(): void {
+    this.startCarousel();
+  }
+
+  ngOnDestroy(): void {
+    this.stopCarousel();
+  }
+
+  startCarousel(): void {
+    this.stopCarousel(); // Clear any existing interval
+    this.carouselInterval = window.setInterval(() => {
+      this.nextSlide();
+    }, 3000); // 3 seconds
+  }
+
+  stopCarousel(): void {
+    if (this.carouselInterval) {
+      clearInterval(this.carouselInterval);
+      this.carouselInterval = undefined;
+    }
+  }
+
+  nextSlide(): void {
+    this.currentSlideIndex = (this.currentSlideIndex + 1) % this.carouselImages.length;
+    this.cdr.detectChanges();
+  }
+
+  goToSlide(index: number): void {
+    this.currentSlideIndex = index;
+    this.cdr.detectChanges();
+    this.stopCarousel();
+    this.startCarousel();
+  }
 
   readonly causeForm: FormGroup = this.fb.group({
     title: ['', [Validators.required]],

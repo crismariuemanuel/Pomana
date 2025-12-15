@@ -1,8 +1,7 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ElementRef, AfterViewInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
-import { MatButtonModule } from '@angular/material/button';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 import { Cause } from '../../../core/causes/causes.service';
@@ -10,131 +9,107 @@ import { Cause } from '../../../core/causes/causes.service';
 @Component({
   selector: 'app-cause-card',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatCardModule, MatButtonModule, MatProgressBarModule],
+  imports: [CommonModule, RouterLink, MatCardModule, MatProgressBarModule],
+  styleUrls: ['./cause-card.component.scss'],
   template: `
-    <mat-card class="cause-card" appearance="outlined">
+    <mat-card class="cause-card" [class.visible]="isVisible" appearance="outlined" [routerLink]="['/cause', cause.id]">
       <img
         class="cover"
-        [src]="cause?.imageUrl"
-        [alt]="cause?.title"
+        [src]="cause.imageUrl"
+        [alt]="cause.title"
         loading="lazy"
       />
 
       <mat-card-content>
-        <h3 class="title">{{ cause?.title }}</h3>
-        <p class="subtitle">{{ cause?.shortDescription }}</p>
-
-        <div class="progress-row">
-          <div class="raised-text">
-            Raised {{ cause?.raised | currency:'USD':'symbol-narrow':'1.0-0' }}
-            of {{ cause?.target | currency:'USD':'symbol-narrow':'1.0-0' }}
-          </div>
-          <mat-progress-bar
-            class="bar"
-            mode="determinate"
-            [value]="progress"
-          ></mat-progress-bar>
-        </div>
+        <h3 class="title">{{ cause.title }}</h3>
+        <p class="subtitle">{{ cause.longDescription }}</p>
       </mat-card-content>
 
-      <mat-card-actions align="end">
-        <a
-          mat-stroked-button
-          color="primary"
-          [routerLink]="['/cause', cause?.id]"
-          >View Cause</a
-        >
-        <button mat-button color="primary" (click)="onDonate()">
-          Donate
-        </button>
-      </mat-card-actions>
+      <div class="progress-section">
+        <div class="progress-info">
+          <span class="donors-text">{{ getDonorsCount() }} Donors</span>
+          <span class="funded-percentage">{{ progress | number:'1.0-0' }}% funded</span>
+        </div>
+        <mat-progress-bar
+          class="bar"
+          mode="determinate"
+          [value]="progress"
+        ></mat-progress-bar>
+        <div class="raised-amount">
+          {{ cause.raised | currency:'USD':'symbol-narrow':'1.0-0' }} raised
+        </div>
+      </div>
     </mat-card>
   `,
-  styles: [
-    `
-      :host {
-        display: block;
-      }
-
-      .cause-card {
-        height: 100%;
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        border-radius: 14px;
-        overflow: hidden;
-        box-shadow: 0 10px 26px rgba(0, 0, 0, 0.08);
-        border: 1px solid #dcd2c4;
-        background: linear-gradient(180deg, #f9f5ec 0%, #f6f1e7 100%);
-      }
-
-      .cover {
-        width: 100%;
-        height: 190px;
-        object-fit: cover;
-      }
-
-      mat-card-content {
-        display: flex;
-        flex-direction: column;
-        gap: 12px;
-        padding: 20px 20px 12px 20px;
-      }
-
-      .title {
-        margin: 0;
-        font-size: 1.2rem;
-        font-weight: 700;
-        color: #2d2d2d;
-        line-height: 1.4;
-      }
-
-      .subtitle {
-        margin: 0;
-        color: #545454;
-        font-size: 1rem;
-        line-height: 1.6;
-      }
-
-      .progress-row {
-        display: flex;
-        flex-direction: column;
-        gap: 6px;
-      }
-
-      .bar {
-        height: 8px;
-        border-radius: 999px;
-      }
-
-      .raised-text {
-        font-size: 1rem;
-        color: #2d2d2d;
-        font-weight: 700;
-        line-height: 1.5;
-      }
-
-      mat-card-actions {
-        display: flex;
-        gap: 8px;
-        justify-content: space-between;
-        padding: 0 16px 16px 16px;
-      }
-
-      mat-card-actions a[mat-stroked-button] {
-        background-color: #EDEBE6;
-        border-color: #000000;
-        color: #000000;
-      }
-
-      mat-card-actions a[mat-stroked-button]:hover {
-        background-color: #e0ddd6;
-      }
-    `,
-  ],
 })
-export class CauseCardComponent {
+export class CauseCardComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) cause!: Cause;
+  isVisible = false;
+  private observer?: IntersectionObserver;
+
+  constructor(
+    private elementRef: ElementRef,
+    private cdr: ChangeDetectorRef
+  ) {}
+
+  ngAfterViewInit(): void {
+    // Use setTimeout to ensure the element is rendered
+    setTimeout(() => {
+      if (typeof IntersectionObserver !== 'undefined') {
+        this.observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                // Add a small delay for animation
+                setTimeout(() => {
+                  this.isVisible = true;
+                  this.cdr.detectChanges();
+                }, 50);
+              } else {
+                // Hide when out of viewport
+                this.isVisible = false;
+                this.cdr.detectChanges();
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+            rootMargin: '0px 0px 0px 0px',
+          }
+        );
+
+        // Observe the host element instead of the card
+        const hostElement = this.elementRef.nativeElement;
+        if (hostElement) {
+          this.observer.observe(hostElement);
+          
+          // Check if already in viewport and trigger animation with delay
+          const rect = hostElement.getBoundingClientRect();
+          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+          if (isInViewport) {
+            // Add delay based on index to create staggered effect
+            const index = Array.from(hostElement.parentElement?.children || []).indexOf(hostElement);
+            setTimeout(() => {
+              this.isVisible = true;
+              this.cdr.detectChanges();
+            }, 100 + (index * 100));
+          }
+        }
+      } else {
+        // Fallback for browsers without IntersectionObserver
+        setTimeout(() => {
+          this.isVisible = true;
+          this.cdr.detectChanges();
+        }, 200);
+      }
+    }, 100);
+  }
+
+  ngOnDestroy(): void {
+    if (this.observer) {
+      this.observer.disconnect();
+    }
+  }
 
   get progress(): number {
     if (!this.cause || this.cause.target <= 0) {
@@ -144,8 +119,10 @@ export class CauseCardComponent {
     return Math.min(100, Math.max(0, pct));
   }
 
-  onDonate(): void {
-    console.log(`Donate clicked for cause ${this.cause?.id}: ${this.cause?.title}`);
+  getDonorsCount(): number {
+    // Simulate donor count based on raised amount
+    // In a real app, this would come from the cause data
+    return Math.floor((this.cause?.raised || 0) / 50) + 1;
   }
 }
 
