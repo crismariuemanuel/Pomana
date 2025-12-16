@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable } from 'rxjs';
+import { environment } from '../../../environments/environment';
 
 export interface Cause {
   id: number;
@@ -17,8 +18,7 @@ export interface Cause {
 })
 export class CausesService {
   private readonly http = inject(HttpClient);
-  // TODO: move to environment config
-  private readonly apiUrl = 'http://localhost:8000';
+  private readonly apiUrl = environment.apiBaseUrl;
 
   getCauses(): Observable<Cause[]> {
     return this.http.get<Cause[]>(`${this.apiUrl}/causes`);

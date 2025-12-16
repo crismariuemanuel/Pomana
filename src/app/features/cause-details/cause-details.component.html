@@ -1,8 +1,8 @@
-@if (isLoading) {
+@if (isLoading()) {
   <div class="container">Loading cause...</div>
-} @else if (loadError) {
+} @else if (loadError()) {
   <div class="container not-found">
-    <h2>{{ loadError }}</h2>
+    <h2>{{ loadError() }}</h2>
     <a mat-stroked-button color="primary" routerLink="/">Back to Feed</a>
   </div>
 } @else if (cause()) {
@@ -29,7 +29,18 @@
     </div>
 
     <div class="actions">
-      <button mat-raised-button color="primary" (click)="openComingSoon()">Donate Now</button>
+      @if (isLoggedIn()) {
+        <button mat-raised-button color="primary" (click)="openComingSoon()">Donate Now</button>
+      } @else {
+        <button 
+          mat-raised-button 
+          color="primary" 
+          (click)="openComingSoon()"
+          matTooltip="Please log in to donate"
+          [matTooltipDisabled]="false">
+          Donate Now
+        </button>
+      }
     </div>
   </div>
 } @else {
