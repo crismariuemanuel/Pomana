@@ -137,14 +137,18 @@ import { CausesService } from '../../core/causes/causes.service';
               }
             </div>
 
+            @if (submitError) {
+              <div class="error-message">{{ submitError }}</div>
+            }
+
             <div class="actions">
               <button
                 mat-raised-button
                 color="primary"
                 type="submit"
-                [disabled]="causeForm.invalid"
+                [disabled]="causeForm.invalid || isSubmitting"
               >
-                Create Cause
+                {{ isSubmitting ? 'Creating...' : 'Create Cause' }}
               </button>
             </div>
           </form>
@@ -161,13 +165,15 @@ export class AddCauseComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly snackBar = inject(MatSnackBar);
   private readonly cdr = inject(ChangeDetectorRef);
 
+  currentSlideIndex = 0;
+  private carouselInterval?: number;
+  isSubmitting = false;
+  submitError = '';
+
   selectedFileName: string | null = null;
   imagePreview: string | null = null;
   imageUrlError: string | null = null;
   private selectedImageDataUrl: string | null = null;
-
-  currentSlideIndex = 0;
-  private carouselInterval?: number;
 
   carouselImages = [
     'https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?auto=format&fit=crop&w=1400&q=80',
@@ -227,37 +233,43 @@ export class AddCauseComponent implements OnInit, OnDestroy, AfterViewInit {
     const input = event.target as HTMLInputElement;
     const file = input.files?.[0];
 
-    if (file) {
-      if (!file.type.startsWith('image/')) {
-        this.imageUrlError = 'Please select a valid image file';
-        this.selectedFileName = null;
-        this.imagePreview = null;
-        this.selectedImageDataUrl = null;
-        this.causeForm.patchValue({ imageUrl: '' });
-        return;
-      }
-
-      if (file.size > 5 * 1024 * 1024) {
-        this.imageUrlError = 'Image size must be less than 5MB';
-        this.selectedFileName = null;
-        this.imagePreview = null;
-        this.selectedImageDataUrl = null;
-        this.causeForm.patchValue({ imageUrl: '' });
-        return;
-      }
-
-      this.selectedFileName = file.name;
-      this.imageUrlError = null;
-
-      const reader = new FileReader();
-      reader.onload = (e: ProgressEvent<FileReader>) => {
-        const result = e.target?.result as string;
-        this.selectedImageDataUrl = result;
-        this.imagePreview = result;
-        this.causeForm.patchValue({ imageUrl: result });
-      };
-      reader.readAsDataURL(file);
+    if (!file) {
+      return;
     }
+
+    if (!file.type.startsWith('image/')) {
+      this.imageUrlError = 'Please select a valid image file';
+      this.selectedFileName = null;
+      this.imagePreview = null;
+      this.selectedImageDataUrl = null;
+      this.causeForm.patchValue({ imageUrl: '' });
+      return;
+    }
+
+    // Limit image size e.g. 3MB
+    const maxSizeBytes = 3 * 1024 * 1024;
+    if (file.size > maxSizeBytes) {
+      this.imageUrlError = 'Image size must be less than 3MB';
+      this.selectedFileName = null;
+      this.imagePreview = null;
+      this.selectedImageDataUrl = null;
+      this.causeForm.patchValue({ imageUrl: '' });
+      return;
+    }
+
+    this.selectedFileName = file.name;
+    this.imageUrlError = null;
+
+    const reader = new FileReader();
+    reader.onload = (e: ProgressEvent<FileReader>) => {
+      const result = e.target?.result as string;
+      this.selectedImageDataUrl = result;
+      this.imagePreview = result;
+      // Store data URL in form so it is sent to backend
+      this.causeForm.patchValue({ imageUrl: result });
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
   }
 
   onSubmit(): void {
@@ -266,23 +278,41 @@ export class AddCauseComponent implements OnInit, OnDestroy, AfterViewInit {
       return;
     }
 
-    if (this.causeForm.valid) {
-      const formValue = this.causeForm.value;
-      this.causesService.addCause({
+    if (this.causeForm.invalid) {
+      this.causeForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSubmitting = true;
+    this.submitError = '';
+
+    const formValue = this.causeForm.value;
+    this.causesService
+      .addCause({
         title: formValue.title,
         shortDescription: formValue.shortDescription,
         longDescription: formValue.longDescription,
         target: Number(formValue.target),
         imageUrl: this.selectedImageDataUrl,
+      })
+      .subscribe({
+        next: () => {
+          this.snackBar.open('Cause created successfully!', 'Close', {
+            duration: 3000,
+            horizontalPosition: 'center',
+            verticalPosition: 'top',
+          });
+          this.router.navigate(['/']);
+        },
+        error: () => {
+          this.submitError = 'Failed to create cause. Please try again.';
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+        },
+        complete: () => {
+          this.isSubmitting = false;
+          this.cdr.detectChanges();
+        },
       });
-
-      this.snackBar.open('Cause created successfully!', 'Close', {
-        duration: 3000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-      });
-
-      this.router.navigate(['/']);
-    }
   }
 }
