@@ -10,37 +10,8 @@ import { Cause } from '../../../core/causes/causes.service';
   selector: 'app-cause-card',
   standalone: true,
   imports: [CommonModule, RouterLink, MatCardModule, MatProgressBarModule],
+  templateUrl: './cause-card.component.html',
   styleUrls: ['./cause-card.component.scss'],
-  template: `
-    <mat-card class="cause-card" [class.visible]="isVisible" appearance="outlined" [routerLink]="['/cause', cause.id]">
-      <img
-        class="cover"
-        [src]="cause.imageUrl"
-        [alt]="cause.title"
-        loading="lazy"
-      />
-
-      <mat-card-content>
-        <h3 class="title">{{ cause.title }}</h3>
-        <p class="subtitle">{{ cause.longDescription }}</p>
-      </mat-card-content>
-
-      <div class="progress-section">
-        <div class="progress-info">
-          <span class="donors-text">{{ getDonorsCount() }} Donors</span>
-          <span class="funded-percentage">{{ progress | number:'1.0-0' }}% funded</span>
-        </div>
-        <mat-progress-bar
-          class="bar"
-          mode="determinate"
-          [value]="progress"
-        ></mat-progress-bar>
-        <div class="raised-amount">
-          {{ cause.raised | currency:'USD':'symbol-narrow':'1.0-0' }} raised
-        </div>
-      </div>
-    </mat-card>
-  `,
 })
 export class CauseCardComponent implements AfterViewInit, OnDestroy {
   @Input({ required: true }) cause!: Cause;

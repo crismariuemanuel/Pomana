@@ -88,6 +88,15 @@ export class AuthService {
     return this._currentUser();
   }
 
+  getMe(): Observable<User> {
+    return this.http.get<User>(`${this.apiUrl}/me`).pipe(
+      tap((user) => {
+        // Update current user if profile is refreshed
+        this.setCurrentUser(user);
+      })
+    );
+  }
+
   private loadUserFromStorage(): User | null {
     const userStr = localStorage.getItem(USER_KEY);
     if (!userStr) {

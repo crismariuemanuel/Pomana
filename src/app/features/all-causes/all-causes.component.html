@@ -1,0 +1,51 @@
+<div class="all-causes-container">
+  <div class="header-section container">
+    <h1 class="page-title">All Causes</h1>
+    <p class="page-subtitle">Discover and support all available causes</p>
+  </div>
+
+  @if (isLoading) {
+    <div class="container">Loading causes...</div>
+  } @else if (loadError) {
+    <div class="container error-text">{{ loadError }}</div>
+  } @else {
+    <div class="grid container">
+      @for (cause of paginatedCauses; track cause.id) {
+        <app-cause-card [cause]="cause" />
+      }
+    </div>
+
+    @if (totalPages > 1) {
+    <div class="pagination container">
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === 1"
+        (click)="goToPage(currentPage - 1)"
+      >
+        Previous
+      </button>
+      
+      <div class="page-numbers">
+        @for (page of totalPagesArray; track page) {
+          <button
+            class="page-number"
+            [class.active]="page === currentPage"
+            (click)="goToPage(page)"
+          >
+            {{ page }}
+          </button>
+        }
+      </div>
+
+      <button 
+        class="pagination-button" 
+        [disabled]="currentPage === totalPages"
+        (click)="goToPage(currentPage + 1)"
+      >
+        Next
+      </button>
+    </div>
+    }
+  }
+</div>
+

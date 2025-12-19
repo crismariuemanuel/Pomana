@@ -60,3 +60,153 @@
   gap: 12px;
 }
 
+.timeline-section {
+  margin-top: 32px;
+  padding-top: 32px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.timeline-section h2 {
+  margin: 0 0 24px 0;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #000000;
+}
+
+.timeline-loading,
+.timeline-empty {
+  padding: 24px;
+  text-align: center;
+  color: #666;
+  font-size: 0.95rem;
+}
+
+.timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 16px;
+  position: relative;
+  padding-left: 8px;
+}
+
+.timeline-item:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 48px;
+  bottom: -20px;
+  width: 2px;
+  background: linear-gradient(to bottom, #e0e0e0, transparent);
+}
+
+.timeline-icon {
+  flex-shrink: 0;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  border-radius: 50%;
+  font-size: 1.25rem;
+  border: 2px solid #e0e0e0;
+}
+
+.timeline-content {
+  flex: 1;
+  padding-bottom: 4px;
+}
+
+.timeline-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.timeline-title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #000000;
+}
+
+.timeline-date {
+  font-size: 0.875rem;
+  color: #666;
+  white-space: nowrap;
+}
+
+.timeline-message {
+  font-size: 0.95rem;
+  color: #333;
+  line-height: 1.6;
+}
+
+.owner-info-card {
+  margin-top: 24px;
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+}
+
+.owner-status {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.owner-status p {
+  margin: 0;
+  color: #000000;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  margin-left: 0.5rem;
+}
+
+.status-badge.status-pending_review {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status-badge.status-rejected {
+  background-color: #f44336;
+  color: white;
+}
+
+.review-notes {
+  margin-top: 12px;
+  padding: 12px;
+  background-color: #fff;
+  border-radius: 8px;
+  border-left: 4px solid #f44336;
+}
+
+.review-notes p {
+  margin: 0 0 8px 0;
+}
+
+.notes-text {
+  color: #333;
+  line-height: 1.6;
+  font-size: 0.95rem;
+}
+
+.pending-message {
+  color: #666;
+  font-style: italic;
+  margin-top: 8px;
+}
+

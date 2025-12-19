@@ -1,0 +1,140 @@
+<div class="profile-container">
+  <!-- User Info Card -->
+  <mat-card class="user-info-card">
+    <mat-card-header>
+      <mat-card-title>My Profile</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isLoadingUser()) {
+        <div class="loading">Loading profile...</div>
+      } @else if (user()) {
+        <div class="user-info">
+          <div class="info-row">
+            <strong>Email:</strong>
+            <span>{{ user()!.email }}</span>
+          </div>
+          <div class="info-row">
+            <strong>Full Name:</strong>
+            <span>{{ user()!.full_name || 'Not set' }}</span>
+          </div>
+          <div class="info-row">
+            <strong>Role:</strong>
+            <span>{{ user()!.role }}</span>
+          </div>
+        </div>
+        <div class="logout-section">
+          <button 
+            mat-raised-button 
+            color="warn" 
+            (click)="onLogout()"
+            class="logout-button"
+          >
+            <mat-icon>logout</mat-icon>
+            Logout
+          </button>
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+
+  <!-- My Causes Section -->
+  <mat-card class="causes-card">
+    <mat-card-header>
+      <mat-card-title>My Causes</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isLoadingCauses()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading causes...</p>
+        </div>
+      } @else if (loadError()) {
+        <div class="error-container">
+          <p class="error-text">{{ loadError() }}</p>
+          <button mat-raised-button color="primary" (click)="loadCauses()">Retry</button>
+        </div>
+      } @else if (causes().length === 0) {
+        <div class="empty-container">
+          <p>You haven't created any causes yet.</p>
+          <a mat-raised-button color="primary" routerLink="/add-cause">Create Your First Cause</a>
+        </div>
+      } @else {
+        <div class="causes-list">
+          @for (cause of causes(); track cause.id) {
+            <mat-card class="cause-item-card">
+              <mat-card-content>
+                <div class="cause-header">
+                  <h3>{{ cause.title }}</h3>
+                  <div class="cause-badges">
+                    <mat-chip [class]="'status-' + cause.status">
+                      {{ getStatusLabel(cause.status || 'unknown') }}
+                    </mat-chip>
+                    @if (cause.is_public) {
+                      <mat-chip class="live-chip">Live</mat-chip>
+                    } @else {
+                      <mat-chip class="not-live-chip">Not Live</mat-chip>
+                    }
+                  </div>
+                </div>
+
+                <div class="cause-details">
+                  @if (cause.phase) {
+                    <div class="detail-row">
+                      <strong>Phase:</strong>
+                      <span>{{ cause.phase }}</span>
+                    </div>
+                  }
+                  <div class="detail-row">
+                    <strong>Raised:</strong>
+                    <span>${{ formatCurrency(cause.raised) }} / ${{ formatCurrency(cause.target) }}</span>
+                  </div>
+                </div>
+
+                @if (cause.status === 'pending_review') {
+                  <div class="pending-message">
+                    <mat-icon>schedule</mat-icon>
+                    <span>Awaiting admin approval</span>
+                  </div>
+                }
+
+                @if (cause.status === 'rejected' && cause.review_notes) {
+                  <mat-expansion-panel class="rejection-panel">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        <mat-icon>error</mat-icon>
+                        <span>Rejection Reason</span>
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <div class="review-notes">
+                      <p>{{ cause.review_notes }}</p>
+                    </div>
+                  </mat-expansion-panel>
+                }
+
+                <div class="cause-actions">
+                  <a 
+                    mat-raised-button 
+                    color="primary" 
+                    [routerLink]="['/cause', cause.id]"
+                  >
+                    View
+                  </a>
+                  @if (canEditCause(cause)) {
+                    <button 
+                      mat-raised-button 
+                      color="accent" 
+                      (click)="onEdit(cause)"
+                    >
+                      Edit
+                    </button>
+                  }
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
+

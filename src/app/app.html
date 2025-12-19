@@ -6,9 +6,12 @@
   @if (isLoggedIn()) {
     <a mat-button routerLink="/add-cause" routerLinkActive="active">Add Cause</a>
     @if (isAdmin()) {
+      <a mat-button routerLink="/admin/review" routerLinkActive="active">Review Causes</a>
       <a mat-button routerLink="/develop" routerLinkActive="active">Develop</a>
     }
-    <a mat-button (click)="logout(); $event.preventDefault()">Logout</a>
+    <a mat-button routerLink="/profile" routerLinkActive="active" class="profile-button" title="Contul tău">
+      <mat-icon class="profile-icon">person</mat-icon>
+    </a>
   } @else {
     <a mat-button routerLink="/login" routerLinkActive="active">Login</a>
     <a mat-button routerLink="/register" routerLinkActive="active">Register</a>

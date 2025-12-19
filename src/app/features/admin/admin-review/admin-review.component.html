@@ -1,0 +1,73 @@
+<div class="admin-review-container">
+  <mat-card class="admin-card">
+    <mat-card-header>
+      <mat-card-title>Pending Review</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isLoading) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading causes...</p>
+        </div>
+      } @else if (loadError) {
+        <div class="error-container">
+          <p class="error-text">{{ loadError }}</p>
+          <button mat-raised-button color="primary" (click)="loadCauses()">Retry</button>
+        </div>
+      } @else if (pendingCauses.length === 0) {
+        <div class="empty-container">
+          <p>No pending causes to review.</p>
+        </div>
+      } @else {
+        <div class="causes-list">
+          @for (cause of pendingCauses; track cause.id) {
+            <mat-card class="cause-card">
+              <mat-card-content>
+                <h3>{{ cause.title }}</h3>
+                <p class="cause-info">
+                  <strong>Owner:</strong> {{ cause.owner_full_name || cause.owner_email || ('User #' + (cause.owner_user_id || 'N/A')) }}
+                </p>
+                <p class="cause-info">
+                  <strong>Status:</strong> 
+                  <span class="status-badge status-pending_review">{{ cause.status }}</span>
+                </p>
+                <p class="cause-info">
+                  <strong>Short Description:</strong> {{ cause.shortDescription }}
+                </p>
+                <p class="cause-info">
+                  <strong>Target:</strong> {{ getTargetFormatted(cause) }}
+                </p>
+                <div class="actions">
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="onViewDetails(cause.id)"
+                  >
+                    View Details
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="primary"
+                    (click)="onApprove(cause.id)"
+                    [disabled]="processingIds.has(cause.id)"
+                  >
+                    Approve
+                  </button>
+                  <button
+                    mat-raised-button
+                    color="warn"
+                    (click)="onReject(cause.id)"
+                    [disabled]="processingIds.has(cause.id)"
+                  >
+                    Reject
+                  </button>
+                </div>
+              </mat-card-content>
+            </mat-card>
+          }
+        </div>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
+

@@ -28,6 +28,33 @@
       <p>{{ cause()?.longDescription }}</p>
     </div>
 
+    <!-- Owner Info Section (only visible to owner for pending/rejected causes) -->
+    @if (showOwnerInfo()) {
+      <mat-card class="owner-info-card">
+        <mat-card-header>
+          <mat-card-title>Your Cause Status</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="owner-status">
+            <p><strong>Status:</strong> 
+              <span class="status-badge status-{{ cause()?.status }}">
+                {{ (cause()?.status || '').replace('_', ' ').toUpperCase() }}
+              </span>
+            </p>
+            @if (cause()?.status === 'rejected' && cause()?.review_notes) {
+              <div class="review-notes">
+                <p><strong>Review Notes:</strong></p>
+                <p class="notes-text">{{ cause()?.review_notes }}</p>
+              </div>
+            }
+            @if (cause()?.status === 'pending_review') {
+              <p class="pending-message">Your cause is currently under review. We'll notify you once it's been reviewed.</p>
+            }
+          </div>
+        </mat-card-content>
+      </mat-card>
+    }
+
     <div class="actions">
       @if (isLoggedIn()) {
         <button mat-raised-button color="primary" (click)="openComingSoon()">Donate Now</button>

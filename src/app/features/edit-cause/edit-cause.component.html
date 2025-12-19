@@ -1,0 +1,121 @@
+<div class="page-container">
+  <mat-card appearance="outlined" class="form-card">
+    <mat-card-header>
+      <mat-card-title>Edit & Resubmit Cause</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      @if (isLoading()) {
+        <div class="loading-container">
+          <mat-spinner diameter="50"></mat-spinner>
+          <p>Loading cause...</p>
+        </div>
+      } @else if (loadError()) {
+        <div class="error-container">
+          <p class="error-text">{{ loadError() }}</p>
+          <button mat-raised-button color="primary" (click)="loadCause()">Retry</button>
+        </div>
+      } @else {
+        <form [formGroup]="causeForm" (ngSubmit)="onSubmit()">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Title</mat-label>
+            <input matInput formControlName="title" placeholder="Enter cause title" />
+            @if (causeForm.get('title')?.hasError('required') && causeForm.get('title')?.touched) {
+              <mat-error>Title is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Short Description</mat-label>
+            <textarea
+              matInput
+              formControlName="shortDescription"
+              placeholder="Brief description of the cause"
+              rows="3"
+            ></textarea>
+            @if (causeForm.get('shortDescription')?.hasError('required') && causeForm.get('shortDescription')?.touched) {
+              <mat-error>Short description is required</mat-error>
+            }
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Long Description</mat-label>
+            <textarea
+              matInput
+              formControlName="longDescription"
+              placeholder="Detailed description of the cause"
+              rows="6"
+            ></textarea>
+            @if (causeForm.get('longDescription')?.hasError('required') && causeForm.get('longDescription')?.touched) {
+              <mat-error>Long description is required</mat-error>
+            }
+          </mat-form-field>
+
+          <div class="file-upload-section">
+            <input
+              type="file"
+              accept="image/*"
+              (change)="onFileSelected($event)"
+              #fileInput
+              class="file-input"
+            />
+            <div class="file-upload-controls">
+              <button
+                mat-raised-button
+                type="button"
+                (click)="fileInput.click()"
+                class="file-button"
+              >
+                Choose Image from Gallery
+              </button>
+              @if (selectedFileName()) {
+                <span class="file-name">{{ selectedFileName() }}</span>
+              }
+            </div>
+            @if (imageUrlError()) {
+              <div class="error-message">{{ imageUrlError() }}</div>
+            }
+            @if (imagePreview() || cause()?.imageUrl) {
+              <div class="image-preview">
+                <img [src]="imagePreview() || cause()?.imageUrl" alt="Preview" />
+              </div>
+            }
+          </div>
+
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Target Amount ($)</mat-label>
+            <input matInput type="number" formControlName="target" placeholder="1000" min="1" />
+            @if (causeForm.get('target')?.hasError('required') && causeForm.get('target')?.touched) {
+              <mat-error>Target amount is required</mat-error>
+            }
+            @if (causeForm.get('target')?.hasError('min') && causeForm.get('target')?.touched) {
+              <mat-error>Target must be greater than 0</mat-error>
+            }
+          </mat-form-field>
+
+          @if (cause()?.review_notes) {
+            <div class="review-notes-info">
+              <p><strong>Previous rejection reason:</strong></p>
+              <p class="notes-text">{{ cause()?.review_notes }}</p>
+            </div>
+          }
+
+          <div class="form-actions">
+            <button mat-stroked-button type="button" (click)="onCancel()">Cancel</button>
+            <button 
+              mat-raised-button 
+              color="primary" 
+              type="submit"
+              [disabled]="causeForm.invalid || isSubmitting()"
+            >
+              @if (isSubmitting()) {
+                <mat-spinner diameter="20" style="display: inline-block; margin-right: 8px;"></mat-spinner>
+              }
+              Save & Resubmit
+            </button>
+          </div>
+        </form>
+      }
+    </mat-card-content>
+  </mat-card>
+</div>
+

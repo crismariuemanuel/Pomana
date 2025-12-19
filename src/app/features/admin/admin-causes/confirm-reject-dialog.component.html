@@ -1,0 +1,27 @@
+<h2 mat-dialog-title>Confirm Rejection</h2>
+<mat-dialog-content>
+  <p>Are you sure you want to reject this cause?</p>
+  <p class="warning-text">Please provide a reason for rejection (required).</p>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Reason for rejection</mat-label>
+    <textarea 
+      matInput 
+      [(ngModel)]="reviewNotes" 
+      rows="4" 
+      required
+      placeholder="Explain why this cause is being rejected..."
+    ></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button [mat-dialog-close]="{ confirmed: false }">Cancel</button>
+  <button 
+    mat-raised-button 
+    color="warn" 
+    [mat-dialog-close]="{ confirmed: true, reviewNotes: reviewNotes }" 
+    [disabled]="!reviewNotes || reviewNotes.trim().length === 0"
+  >
+    Reject
+  </button>
+</mat-dialog-actions>
+

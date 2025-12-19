@@ -22,72 +22,7 @@ import { AuthService } from '../../../core/auth/auth.service';
     MatSnackBarModule,
     RouterLink,
   ],
-  template: `
-    <div class="auth-page-container">
-      <div class="background-carousel">
-        <div class="carousel-container">
-          <div class="carousel-slides">
-            @for (image of carouselImages; track image; let i = $index) {
-              <div class="carousel-slide" [class.active]="i === currentSlideIndex">
-                <img [src]="image" [alt]="'Carousel image ' + (i + 1)" />
-              </div>
-            }
-          </div>
-          <div class="carousel-overlay"></div>
-        </div>
-      </div>
-      
-      <div class="form-wrapper">
-        <mat-card class="auth-card">
-          <mat-card-header>
-            <mat-card-title>Login</mat-card-title>
-          </mat-card-header>
-          <mat-card-content>
-            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Email</mat-label>
-                <input matInput type="email" formControlName="email" placeholder="Enter your email" />
-                @if (loginForm.get('email')?.hasError('required') && loginForm.get('email')?.touched) {
-                  <mat-error>Email is required</mat-error>
-                }
-                @if (loginForm.get('email')?.hasError('email') && loginForm.get('email')?.touched) {
-                  <mat-error>Please enter a valid email</mat-error>
-                }
-              </mat-form-field>
-
-              <mat-form-field appearance="outline" class="full-width">
-                <mat-label>Password</mat-label>
-                <input matInput type="password" formControlName="password" placeholder="Enter your password" />
-                @if (loginForm.get('password')?.hasError('required') && loginForm.get('password')?.touched) {
-                  <mat-error>Password is required</mat-error>
-                }
-              </mat-form-field>
-
-              @if (errorMessage) {
-                <div class="error-message">{{ errorMessage }}</div>
-              }
-
-              <div class="actions">
-                <button
-                  mat-raised-button
-                  color="primary"
-                  type="submit"
-                  [disabled]="loginForm.invalid || isSubmitting"
-                  class="full-width"
-                >
-                  {{ isSubmitting ? 'Logging in...' : 'Login' }}
-                </button>
-              </div>
-
-              <div class="register-link">
-                <p>Don't have an account? <a routerLink="/register">Register here</a></p>
-              </div>
-            </form>
-          </mat-card-content>
-        </mat-card>
-      </div>
-    </div>
-  `,
+  templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
 })
 export class LoginComponent implements OnInit, OnDestroy, AfterViewInit {
