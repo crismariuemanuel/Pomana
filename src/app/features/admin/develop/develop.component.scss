@@ -1,14 +1,135 @@
 .develop-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: calc(100vh - 200px);
   padding: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
 }
 
 .develop-card {
   width: 100%;
-  max-width: 600px;
-  padding: 2rem;
+}
+
+.loading-container,
+.error-container,
+.empty-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem;
+  text-align: center;
+  gap: 1rem;
+}
+
+.error-text {
+  color: #f44336;
+  font-size: 1rem;
+}
+
+.causes-table {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.causes-table th {
+  font-weight: 600;
+  color: #000;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.status-pending_review {
+  background-color: #ff9800;
+  color: white;
+}
+
+.status-approved {
+  background-color: #4caf50;
+  color: white;
+}
+
+.status-in_progress {
+  background-color: #2196f3;
+  color: white;
+}
+
+.status-rejected {
+  background-color: #f44336;
+  color: white;
+}
+
+.status-completed {
+  background-color: #9c27b0;
+  color: white;
+}
+
+.status-unknown {
+  background-color: #9e9e9e;
+  color: white;
+}
+
+.public-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+.public-badge.public {
+  background-color: #4caf50;
+  color: white;
+}
+
+.public-badge.not-public {
+  background-color: #9e9e9e;
+  color: white;
+}
+
+.causes-table td {
+  padding: 1rem 0.5rem;
+  vertical-align: middle;
+}
+
+.causes-table th {
+  padding: 1rem 0.5rem;
+  vertical-align: middle;
+}
+
+.actions-header {
+  text-align: center;
+  width: 200px;
+}
+
+.actions-cell {
+  text-align: center;
+  vertical-align: middle;
+}
+
+.action-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  flex-wrap: nowrap;
+}
+
+.view-button {
+  min-width: 120px;
+  height: 36px;
+}
+
+.delete-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 

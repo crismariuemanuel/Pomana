@@ -116,5 +116,10 @@ export class CausesService {
   resubmitMyCause(id: number): Observable<Cause> {
     return this.http.post<Cause>(`${this.apiUrl}/me/causes/${id}/submit`, {});
   }
+
+  // Admin delete endpoint
+  deleteCause(id: number): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/admin/causes/${id}`);
+  }
 }
 
